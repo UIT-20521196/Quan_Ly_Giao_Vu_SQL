@@ -1098,20 +1098,20 @@ WHERE NOT EXISTS(SELECT*
 SELECT HOCVIEN.MAHV,CONCAT(HO, ' ',TEN) AS HOTEN,KQ4.MAMH,DIEM  -- In ra điểm tất cả lần thi cuối 
 FROM KETQUATHI KQ4,HOCVIEN, (SELECT MAMH, MAX(DIEM) AS DIEMCAONHAT -- Điểm cao nhất của từng môn lần thi cuối 
 							 FROM ( SELECT MAHV,MAMH ,LANTHI,DIEM   
-									FROM KETQUATHI KQ1
-									WHERE LANTHI = (SELECT MAX(LANTHI)
-													FROM KETQUATHI KQ2
-				   									WHERE (KQ1.MAHV = KQ2.MAHV AND KQ1.MAMH = KQ2.MAMH)
-													GROUP BY MAHV,MAMH
-													)
-								   ) AS A, HOCVIEN --Bảng A lọc ra điểm tất cả lần thi cuối
+								FROM KETQUATHI KQ1
+								WHERE LANTHI = (SELECT MAX(LANTHI)
+										FROM KETQUATHI KQ2
+				   						WHERE (KQ1.MAHV = KQ2.MAHV AND KQ1.MAMH = KQ2.MAMH)
+										GROUP BY MAHV,MAMH
+										)
+								) AS A, HOCVIEN --Bảng A lọc ra điểm tất cả lần thi cuối
 							 WHERE HOCVIEN.MAHV = A.MAHV
 							 GROUP BY MAMH
-							) AS C -- Bảng C lọc ra điểm cao nhất của từng môn lần thi cuối 
+			    ) AS C -- Bảng C lọc ra điểm cao nhất của từng môn lần thi cuối 
 WHERE LANTHI = (SELECT MAX(LANTHI) -- Lần thi cuối 
-			    FROM KETQUATHI KQ5
-				WHERE (KQ4.MAHV = KQ5.MAHV AND KQ4.MAMH = KQ5.MAMH)
-				GROUP BY MAHV,MAMH
-			    )
+		FROM KETQUATHI KQ5
+		WHERE (KQ4.MAHV = KQ5.MAHV AND KQ4.MAMH = KQ5.MAMH)
+		GROUP BY MAHV,MAMH
+		)
 	  AND KQ4.MAMH = C.MAMH AND KQ4.DIEM = C.DIEMCAONHAT -- Học viên có môn học và điểm trùng với bảng C
 	  AND HOCVIEN.MAHV = KQ4.MAHV
